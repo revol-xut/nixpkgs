@@ -1,14 +1,12 @@
-{ lib, pkgs, stdenv, fetchFromGitHub, jdk11_headless }:
+{ lib, pkgs, stdenv, fetchzip, jdk11_headless }:
 
 stdenv.mkDerivation {
   pname = "lfc";
   version = "0.1.0";
 
-  src = fetchFromGitHub {
-    owner = "revol-xut";
-    repo = "lingua-franca-nix-releases";
-    rev = "d37bbfa530f0189c3e86ce0191134cdf42c6aec7";
-    sha256 = "/qMBOjffvShCPcbh9rJ7aVgdgZQ1hilHakjLyEhSmgs=";
+  src = fetchzip {
+    url = "https://github.com/lf-lang/lingua-franca/releases/download/v0.1.0-beta/lfc_0.1.0-beta.zip";
+    sha256 = "mP+MQSTSUeqELGR6KJJCg943p6uw+XSn6/3tmhnCc4s=";
   };
 
   buildInputs = [ jdk11_headless ];
