@@ -55,7 +55,7 @@ let
     base64 = callPackage ../development/ocaml-modules/base64 { };
 
     bap = callPackage ../development/ocaml-modules/bap {
-      inherit (pkgs.llvmPackages_8) llvm;
+      inherit (pkgs.llvmPackages) llvm;
     };
 
     batteries = callPackage ../development/ocaml-modules/batteries { };
@@ -294,6 +294,8 @@ let
     domain-name = callPackage ../development/ocaml-modules/domain-name { };
 
     dose3 = callPackage ../development/ocaml-modules/dose3 { };
+
+    dssi = callPackage ../development/ocaml-modules/dssi { };
 
     dtoa = callPackage ../development/ocaml-modules/dtoa { };
 
@@ -645,9 +647,13 @@ let
 
     lacaml = callPackage ../development/ocaml-modules/lacaml { };
 
+    ladspa = callPackage ../development/ocaml-modules/ladspa { };
+
     lambdasoup = callPackage ../development/ocaml-modules/lambdasoup { };
 
     lambda-term = callPackage ../development/ocaml-modules/lambda-term { };
+
+    lastfm = callPackage ../development/ocaml-modules/lastfm { };
 
     lens = callPackage ../development/ocaml-modules/lens { };
 
@@ -1254,6 +1260,8 @@ let
 
     reason-native = lib.recurseIntoAttrs (callPackage ../development/ocaml-modules/reason-native { });
 
+    rebez = callPackage ../development/ocaml-modules/rebez { };
+
     rfc7748 = callPackage ../development/ocaml-modules/rfc7748 { };
 
     ezresto = callPackage ../development/ocaml-modules/resto/ezresto.nix { };
@@ -1462,6 +1470,8 @@ let
     xenstore-tool = callPackage ../development/ocaml-modules/xenstore-tool { };
 
     xmlm = callPackage ../development/ocaml-modules/xmlm { };
+
+    xmlplaylist = callPackage ../development/ocaml-modules/xmlplaylist { };
 
     xml-light = callPackage ../development/ocaml-modules/xml-light { };
 

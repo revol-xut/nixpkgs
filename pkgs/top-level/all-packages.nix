@@ -3362,6 +3362,8 @@ with pkgs;
 
   extrude = callPackage ../tools/security/extrude { };
 
+  f2 = callPackage ../tools/misc/f2 {};
+
   f3 = callPackage ../tools/filesystems/f3 { };
 
   f3d = callPackage ../applications/graphics/f3d {
@@ -6431,7 +6433,11 @@ with pkgs;
 
   google-guest-oslogin = callPackage ../tools/virtualization/google-guest-oslogin { };
 
-  google-cloud-cpp = callPackage ../development/libraries/google-cloud-cpp { };
+  google-cloud-cpp = callPackage ../development/libraries/google-cloud-cpp {
+    abseil-cpp = abseil-cpp.override {
+      cxxStandard = "14";
+    };
+  };
 
   google-java-format = callPackage ../development/tools/google-java-format { };
 
@@ -27856,7 +27862,9 @@ with pkgs;
 
   mnamer = callPackage ../applications/misc/mnamer { };
 
-  moc = callPackage ../applications/audio/moc { };
+  moc = callPackage ../applications/audio/moc {
+    inherit (darwin.apple_sdk.frameworks) CoreServices;
+  };
 
   mod-arpeggiator-lv2 = callPackage ../applications/audio/mod-arpeggiator-lv2 { };
 
@@ -31095,9 +31103,9 @@ with pkgs;
 
   keeperrl = callPackage ../games/keeperrl { };
 
-  lbreakout2 = callPackage ../games/lbreakout2 { };
+  lbreakout2 = callPackage ../games/lgames/lbreakout2 { };
 
-  ltris = callPackage ../games/ltris { };
+  ltris = callPackage ../games/lgames/ltris { };
 
   lunar-client = callPackage ../games/lunar-client { };
 
