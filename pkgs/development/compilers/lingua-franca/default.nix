@@ -22,6 +22,7 @@ stdenv.mkDerivation rec {
   installPhase = ''
     cp -r ./ $out/
     chmod +x $out/bin/lfc
+    chmod 777 $out/bin/lfc
   '';
 
   meta = with lib; {
