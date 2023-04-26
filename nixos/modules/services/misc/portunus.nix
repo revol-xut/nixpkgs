@@ -60,6 +60,12 @@ in
       description = lib.mdDoc "Group account under which Portunus runs its webserver.";
     };
 
+    userRegex = mkOption {
+      type = types.str;
+      default = "[a-z_][a-z0-9_-]*\$?";
+      description = lib.mdDoc "Regex that description allowed usernames.";
+    };
+
     dex = {
       enable = mkEnableOption (lib.mdDoc ''
         Dex ldap connector.
@@ -244,6 +250,7 @@ in
           PORTUNUS_SLAPD_GROUP = cfg.ldap.group;
           PORTUNUS_SLAPD_USER = cfg.ldap.user;
           PORTUNUS_SLAPD_SCHEMA_DIR = "${cfg.ldap.package}/etc/schema";
+          PORTUNUS_USER_REGEX = cfg.userRegex;
         } // (optionalAttrs (cfg.seedPath != null) ({
           PORTUNUS_SEED_PATH = cfg.seedPath;
         })) // (optionalAttrs cfg.ldap.tls (
