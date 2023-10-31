@@ -172,9 +172,9 @@ in
         AUTH_LDAP_FIND_GROUP_PERMS = True
       '';
     };
-    keycloakClientSecret = mkOption
+    keycloakClientSecret = lib.mkOption
       {
-        type = types.path;
+        type = lib.types.path;
         default = "";
         description = lib.mdDoc ''
           File where the secret for the keycloak client secret is located.
@@ -268,7 +268,6 @@ in
       after = [ "network-online.target" "redis-netbox.service" ];
     };
 
-<<<<<<< HEAD
     systemd.services = let
       defaultServiceConfig = {
         WorkingDirectory = "${cfg.dataDir}";
@@ -369,96 +368,6 @@ in
 
       after = [ "network-online.target" "netbox.service" ];
       wants = [ "network-online.target" ];
-=======
-    systemd.services =
-      let
-        defaultServiceConfig = {
-          WorkingDirectory = "${cfg.dataDir}";
-          User = "netbox";
-          Group = "netbox";
-          StateDirectory = "netbox";
-          StateDirectoryMode = "0750";
-          Restart = "on-failure";
-        };
-      in
-      {
-        netbox-migration = {
-          description = "NetBox migrations";
-          wantedBy = [ "netbox.target" ];
-
-          environment = {
-            PYTHONPATH = pkg.pythonPath;
-          };
-
-          serviceConfig = defaultServiceConfig // {
-            Type = "oneshot";
-            ExecStart = ''
-              ${pkg}/bin/netbox migrate
-            '';
-          };
-        };
-
-        netbox = {
-          description = "NetBox WSGI Service";
-          wantedBy = [ "netbox.target" ];
-          after = [ "netbox-migration.service" ];
-
-          preStart = ''
-            ${pkg}/bin/netbox trace_paths --no-input
-            ${pkg}/bin/netbox collectstatic --no-input
-            ${pkg}/bin/netbox remove_stale_contenttypes --no-input
-          '';
-
-          environment = {
-            PYTHONPATH = pkg.pythonPath;
-          };
-
-          serviceConfig = defaultServiceConfig // {
-            ExecStart = ''
-              ${pkgs.python3Packages.gunicorn}/bin/gunicorn netbox.wsgi \
-                --bind ${cfg.listenAddress}:${toString cfg.port} \
-                --pythonpath ${pkg}/opt/netbox/netbox
-            '';
-          };
-        };
-
-        netbox-rq = {
-          description = "NetBox Request Queue Worker";
-          wantedBy = [ "netbox.target" ];
-          after = [ "netbox.service" ];
-
-          environment = {
-            PYTHONPATH = pkg.pythonPath;
-          };
-
-          serviceConfig = defaultServiceConfig // {
-            ExecStart = ''
-              ${pkg}/bin/netbox rqworker high default low
-            '';
-          };
-        };
-
-        netbox-housekeeping = {
-          description = "NetBox housekeeping job";
-          after = [ "netbox.service" ];
-
-          environment = {
-            PYTHONPATH = pkg.pythonPath;
-          };
-
-          serviceConfig = defaultServiceConfig // {
-            Type = "oneshot";
-            ExecStart = ''
-              ${pkg}/bin/netbox housekeeping
-            '';
-          };
-        };
-      };
-
-    systemd.timers.netbox-housekeeping = {
-      description = "Run NetBox housekeeping job";
-      wantedBy = [ "timers.target" ];
->>>>>>> dbfbf6a3ac62 (netbox: add keycloakClientSecret option)
 
       timerConfig = {
         OnCalendar = "daily";
