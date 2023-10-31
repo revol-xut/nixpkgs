@@ -1,4 +1,5 @@
 { stdenv, lib, fetchurl, fetchpatch
+, fetchzip, zstd
 # Channel data:
 , channel, upstream-info
 # Helper functions:
@@ -116,15 +117,39 @@ let
     inherit (upstream-info.deps.ungoogled-patches) rev sha256;
   };
 
+  recompressTarball = { version, sha256 ? "" }: fetchzip {
+    name = "chromium-${version}.tar.zstd";
+    url = "https://commondatastorage.googleapis.com/chromium-browser-official/chromium-${version}.tar.xz";
+    inherit sha256;
+
+    nativeBuildInputs = [ zstd ];
+
+    postFetch = ''
+      echo removing unused code from tarball to stay under hydra limit
+      rm -r $out/third_party/{rust-src,llvm}
+
+      echo moving remains out of \$out
+      mv $out source
+
+      echo recompressing final contents into new tarball
+      # try to make a deterministic tarball
+      tar \
+        --use-compress-program "zstd -T$NIX_BUILD_CORES" \
+        --sort name \
+        --mtime 1970-01-01 \
+        --owner=root --group=root \
+        --numeric-owner --mode=go=rX,u+rw,a-s \
+        -cf $out source
+    '';
+  };
+
+
   base = rec {
     pname = "${packageName}-unwrapped";
     inherit (upstream-info) version;
     inherit packageName buildType buildPath;
 
-    src = fetchurl {
-      url = "https://commondatastorage.googleapis.com/chromium-browser-official/chromium-${version}.tar.xz";
-      inherit (upstream-info) sha256;
-    };
+    src = recompressTarball { inherit version; inherit (upstream-info) sha256; };
 
     nativeBuildInputs = [
       ninja pkg-config
@@ -240,6 +265,12 @@ let
 
       # We need the fix for https://bugs.chromium.org/p/chromium/issues/detail?id=1254408:
       base64 --decode ${clangFormatPython3} > buildtools/linux64/clang-format
+
+      # Add final newlines to scripts that do not end with one.
+      # This is a temporary workaround until https://github.com/NixOS/nixpkgs/pull/255463 (or similar) has been merged,
+      # as patchShebangs hard-crashes when it encounters files that contain only a shebang and do not end with a final
+      # newline.
+      find . -type f -perm -0100 -exec sed -i -e '$a\' {} +
 
       patchShebangs .
       # Link to our own Node.js and Java (required during the build):
@@ -374,6 +405,7 @@ let
       chromiumDeps = {
         gn = gnChromium;
       };
+      inherit recompressTarball;
     };
   }
   # overwrite `version` with the exact same `version` from the same source,

@@ -67,8 +67,16 @@ in rec {
         (onSystems ["x86_64-linux"] "nixos.tests.docker")
         (onFullSupported "nixos.tests.ecryptfs")
         (onFullSupported "nixos.tests.env")
-        (onFullSupported "nixos.tests.firefox-esr")
-        (onFullSupported "nixos.tests.firefox")
+
+        # Way too many manual retries required on Hydra.
+        #  Apparently it's hard to track down the cause.
+        #  So let's depend just on the packages for now.
+        #(onFullSupported "nixos.tests.firefox-esr")
+        #(onFullSupported "nixos.tests.firefox")
+        # Note: only -unwrapped variants have a Hydra job.
+        (onFullSupported "nixpkgs.firefox-esr-unwrapped")
+        (onFullSupported "nixpkgs.firefox-unwrapped")
+
         (onFullSupported "nixos.tests.firewall")
         (onFullSupported "nixos.tests.fontconfig-default-fonts")
         (onFullSupported "nixos.tests.gnome")
@@ -158,6 +166,11 @@ in rec {
         (onFullSupported "nixpkgs.emacs")
         (onFullSupported "nixpkgs.jdk")
         ["nixpkgs.tarball"]
+
+        # Ensure that nixpkgs-check-by-name is available in all release channels and nixos-unstable,
+        # so that a pre-built version can be used in CI for PR's on the corresponding development branches.
+        # See ../pkgs/test/nixpkgs-check-by-name/README.md
+        (onSystems ["x86_64-linux"] "nixpkgs.tests.nixpkgs-check-by-name")
       ];
     };
 }

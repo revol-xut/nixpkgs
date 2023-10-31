@@ -1,11 +1,11 @@
 { lib, appimageTools, fetchurl, nodePackages }: let
   pname = "flexoptix-app";
-  version = "5.13.4";
+  version = "5.16.0-latest";
 
   src = fetchurl {
     name = "${pname}-${version}.AppImage";
     url = "https://flexbox.reconfigure.me/download/electron/linux/x64/FLEXOPTIX%20App.${version}.AppImage";
-    hash = "sha256-W+9KmKZ1bPfQfv1DXCJrIswriw4ivBVZPW81tfvRBc0=";
+    hash = "sha256-A10r8IUB3zWKWmjen90vLXPF7V/Cgo+DhFn/Hsc1Nhg=";
   };
 
   udevRules = fetchurl {
@@ -28,7 +28,7 @@ in appimageTools.wrapAppImage {
   inherit pname version;
   src = appimageContents;
 
-  multiPkgs = null; # no 32bit needed
+  multiArch = false; # no 32bit needed
   extraPkgs = { pkgs, ... }@args: [
     pkgs.hidapi
   ] ++ appimageTools.defaultFhsEnvArgs.multiPkgs args;

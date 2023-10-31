@@ -3,10 +3,10 @@
 {
   firefox = buildMozillaMach rec {
     pname = "firefox";
-    version = "116.0.2";
+    version = "119.0";
     src = fetchurl {
       url = "mirror://mozilla/firefox/releases/${version}/source/firefox-${version}.source.tar.xz";
-      sha512 = "2c0ae18672fe22c75002744831130e13da764f83726951e5b58cfe74f7f473e22634ce08ebc11a98bac5baec0a4ac099a3a350a8b756af9c5bea6d5f4432da6d";
+      sha512 = "4b555c444add36567fd538752b122f227cf78bb70b72c79e6d8ae8d9c2e61c3cdacfae79c37970753b8b5c7716b28c686071eb7b551773c30a76852f3550676c";
     };
 
     meta = {
@@ -29,11 +29,11 @@
 
   firefox-beta = buildMozillaMach rec {
     pname = "firefox-beta";
-    version = "117.0b5";
+    version = "119.0b9";
     applicationName = "Mozilla Firefox Beta";
     src = fetchurl {
       url = "mirror://mozilla/firefox/releases/${version}/source/firefox-${version}.source.tar.xz";
-      sha512 = "8cb7a96a996b5d3b4e119b4b6317eb7015f9e3d96a3c6a301effe4e5cdaf1c8295a68e57cd919b42a1bef8717ae6764edcbedd4399ca89e14e5f212b144125c1";
+      sha512 = "11d07474e3ca72a4e2f60053882e09a215e0d29d6830d0cd41447bb67370118356090af7adcbacd7703ad9fcdda83c9f909419c86b8f3bf2eacd9ca3d3aa3f54";
     };
 
     meta = {
@@ -56,12 +56,12 @@
 
   firefox-devedition = (buildMozillaMach rec {
     pname = "firefox-devedition";
-    version = "117.0b5";
+    version = "119.0b9";
     applicationName = "Mozilla Firefox Developer Edition";
     branding = "browser/branding/aurora";
     src = fetchurl {
       url = "mirror://mozilla/devedition/releases/${version}/source/firefox-${version}.source.tar.xz";
-      sha512 = "16f2fc0ac5d3cd76659b33b319a39367d5e37d7c2f5246f2f76a57b1455ab16af83872ec4fb74a30e127b744a06d8dc5c99a531d3bf2ff4c6465d1d5e2fcd126";
+      sha512 = "ce3e2adb3171aa05c7af3b7a4ea25eaafbc109c522b90e26aad577192a0902000fb7d705fa5707a9a7d0be2ab1c0cddc5a98abbe6549e1377c0a1d765bda62eb";
     };
 
     meta = {
@@ -85,41 +85,13 @@
     env.MOZ_REQUIRE_SIGNING = "";
   });
 
-  firefox-esr-102 = buildMozillaMach rec {
-    pname = "firefox-esr-102";
-    version = "102.14.0esr";
-    applicationName = "Mozilla Firefox ESR";
-    src = fetchurl {
-      url = "mirror://mozilla/firefox/releases/${version}/source/firefox-${version}.source.tar.xz";
-      sha512 = "6cabd474d0f3a768a0f12fa5c9984ed193906b503202010fd1da0e2affa091fcc5c165e6b9c4152d286410d46b72b2ddbf52d323bf5ea542f29e5267a94dfdcd";
-    };
-
-    meta = {
-      changelog = "https://www.mozilla.org/en-US/firefox/${lib.removeSuffix "esr" version}/releasenotes/";
-      description = "A web browser built from Firefox Extended Support Release source tree";
-      homepage = "http://www.mozilla.com/en-US/firefox/";
-      maintainers = with lib.maintainers; [ hexa ];
-      platforms = lib.platforms.unix;
-      badPlatforms = lib.platforms.darwin;
-      broken = stdenv.buildPlatform.is32bit; # since Firefox 60, build on 32-bit platforms fails with "out of memory".
-                                             # not in `badPlatforms` because cross-compilation on 64-bit machine might work.
-      license = lib.licenses.mpl20;
-    };
-    tests = [ nixosTests.firefox-esr-102 ];
-    updateScript = callPackage ./update.nix {
-      attrPath = "firefox-esr-102-unwrapped";
-      versionPrefix = "102";
-      versionSuffix = "esr";
-    };
-  };
-
   firefox-esr-115 = buildMozillaMach rec {
     pname = "firefox-esr-115";
-    version = "115.1.0esr";
+    version = "115.4.0esr";
     applicationName = "Mozilla Firefox ESR";
     src = fetchurl {
       url = "mirror://mozilla/firefox/releases/${version}/source/firefox-${version}.source.tar.xz";
-      sha512 = "b2abb706fef2f1aa9451e7ac7c2affa0cc92cf2b0c6629f106a94c62017476380c7b6f406861fa468f60ea898d8402f534ad74844eb3932741fbd981cec66592";
+      sha512 = "3ee680c5c503df7e4913794b7029ccffc10889f8f259f16030b24c1c18c1528439123532374ccb3a7e7a0d5d64068949cb85638a29694a7d99b74dd403ddefdc";
     };
 
     meta = {

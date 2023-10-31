@@ -80,8 +80,10 @@ stdenv.mkDerivation rec {
     # Hardcode paths to various dependencies so that they can be found at runtime.
     (substituteAll {
       src = ./fix-paths.patch;
-      inherit libgnomekbd unzip;
+      gkbd_keyboard_display = "${lib.getBin libgnomekbd}/bin/gkbd-keyboard-display";
+      glib_compile_schemas = "${glib.dev}/bin/glib-compile-schemas";
       gsettings = "${glib.bin}/bin/gsettings";
+      unzip = "${lib.getBin unzip}/bin/unzip";
     })
 
     # Use absolute path for libshew installation to make our patched gobject-introspection
@@ -103,6 +105,17 @@ stdenv.mkDerivation rec {
     (fetchpatch {
       url = "https://src.fedoraproject.org/rpms/gnome-shell/raw/9a647c460b651aaec0b8a21f046cc289c1999416/f/0001-gdm-Work-around-failing-fingerprint-auth.patch";
       sha256 = "pFvZli3TilUt6YwdZztpB8Xq7O60XfuWUuPMMVSpqLw=";
+    })
+
+    # screenshot: Some fixes to shortcut handling
+    # https://gitlab.gnome.org/GNOME/gnome-shell/-/merge_requests/2944
+    (fetchpatch {
+      url = "https://gitlab.gnome.org/GNOME/gnome-shell/-/commit/39b0c0030b0f86727da06d55f23e04a1b313797c.patch";
+      sha256 = "Z9s1zxiZoApYCOO2OhVB5tvnkbOShCNy4PuWf/U8ryU=";
+    })
+    (fetchpatch {
+      url = "https://gitlab.gnome.org/GNOME/gnome-shell/-/commit/23e24a4eba4679167746e613240ba9813a689dbb.patch";
+      sha256 = "OBuP6fDGDgaRx/YpBQaZ/RWc9i5XAkqBdSnBeVAxWow=";
     })
   ];
 
